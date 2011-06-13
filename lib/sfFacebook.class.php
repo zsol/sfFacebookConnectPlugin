@@ -450,6 +450,7 @@ class sfFacebook
       'en' => 'en_US',
       'de' => 'de_DE',
       'it' => 'it_IT',
+      'hu' => 'hu_HU'
     );
 
     return array_key_exists($culture, $culture_to_locale) ? $culture_to_locale[$culture] : $culture;
