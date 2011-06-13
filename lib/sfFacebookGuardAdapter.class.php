@@ -214,10 +214,13 @@ abstract class sfFacebookGuardAdapter
     $details = $facebook->api(array('method' => 'users.getInfo',
                                     'uids' => $facebook_uid,
                                     'fields' => 'username,email'));
-    if (!is_array($details) || !is_array($details[0]) || !isset($details[0]['username']) || !isset($details[0]['email']))
+    if (!is_array($details) || !is_array($details[0]) || !isset($details[0]['email']))
     {
       throw new Exception("Error getting user details from facebook: ". json_encode($details));
     }
+
+    if (!isset($details[0]['username']))
+      $details[0]['username'] = "FB_" . $facebook_uid;
 
     $sfGuardUser->setUsername($details[0]['username']);
     $this->setUserProfileProperty($sfGuardUser, 'email', $details[0]['email']);
