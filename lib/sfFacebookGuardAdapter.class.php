@@ -210,7 +210,17 @@ abstract class sfFacebookGuardAdapter
   public function createSfGuardUserWithFacebookUidAndCon($facebook_uid, $con)
   {
     $sfGuardUser = new sfGuardUser();
-    $sfGuardUser->setUsername('Facebook_'.$facebook_uid);
+    $facebook = sfFacebook::getFacebookClient();
+    $details = $facebook->api(array('method' => 'users.getInfo',
+                                    'uids' => $facebook_uid,
+                                    'fields' => 'username,email'));
+    if (!is_array($details) || !is_array($details[0]) || !isset($details[0]['username']) || !isset($details[0]['email']))
+    {
+      throw new Exception("Error getting user details from facebook: ". json_encode($details));
+    }
+
+    $sfGuardUser->setUsername($details[0]['username']);
+    $this->setUserProfileProperty($sfGuardUser, 'email', $details[0]['email']);
     $this->setUserFacebookUid($sfGuardUser, $facebook_uid);
     sfFacebookConnect::newSfGuardConnectionHook($sfGuardUser, $facebook_uid);
 

@@ -41,7 +41,7 @@ sfFacebookConnect.prototype.requireSession = function(forward, callback)
     } else {
       // user cancelled login
     }
-  });
+  }, {perms:'email'});
 };
 
 /*
